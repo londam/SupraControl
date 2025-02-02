@@ -20,13 +20,38 @@ export class UsersComponent {
   // Filtering functionality
   searchFilter: string = ''; // Filter value for real-time column search
 
+  // Users selected by hand in the data grid
+  selectedRows: User[] = [];
+
   // Action Button Handlers
   editUser() {
     console.log('Edit user clicked');
   }
 
   deleteUser() {
-    console.log('Delete user clicked');
+    const selectedUsers = this.selectedRows;
+    if (selectedUsers.length === 0) {
+      alert('No users selected for deletion.');
+      return;
+    }
+
+    // Show a confirmation dialog
+    const confirmation = window.confirm(
+      `Are you sure you want to delete ${selectedUsers.length} user(s)?`
+    );
+
+    if (confirmation) {
+      this.removeUsers(selectedUsers);
+    }
+  }
+
+  // Remove users from the list
+  removeUsers(usersToDelete: User[]) {
+    this.filteredUsers = this.filteredUsers.filter(
+      (user) => !usersToDelete.includes(user)
+    );
+    alert('User(s) deleted successfully!');
+    // Here, you could also send a request to the server to delete the users
   }
 
   addNewUser() {
@@ -50,11 +75,15 @@ export class UsersComponent {
 
   // Handle selection of users in the DataGrid
   onSelectionChanged(event: any) {
-    const selectedRows = event.selectedRowsData;
-    console.log('Selected Users:', selectedRows);
+    this.selectedRows = event.selectedRowsData;
+    console.log('Selected Users:', this.selectedRows);
   }
 }
 
+// MOCK DATA
+// MOCK DATA
+// MOCK DATA
+// MOCK DATA
 const USERS: User[] = [
   {
     id: 1,
@@ -67,6 +96,13 @@ const USERS: User[] = [
     id: 2,
     name: 'Jane',
     surname: 'Smith',
+    role: 'User',
+    email: 'jane@example.com',
+  },
+  {
+    id: 2,
+    name: 'Stim',
+    surname: 'Jubilee',
     role: 'User',
     email: 'jane@example.com',
   },
