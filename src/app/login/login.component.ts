@@ -8,8 +8,8 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-  username: string = 'testniZadatak';
-  password: string = 'TestniZadatak123.';
+  username: string = '';
+  password: string = '';
   errorMessage: string = '';
 
   constructor(private http: HttpClient, private router: Router) {}
