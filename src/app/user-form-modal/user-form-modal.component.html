@@ -3,32 +3,155 @@
     <h2>{{ user ? "Edit User" : "Add New User" }}</h2>
 
     <form>
-      <label for="FirstName">FirstName</label>
-      <input
-        id="FirstName"
-        [(ngModel)]="userForm.FirstName"
-        name="FirstName"
-        type="text"
-        required
-      />
-
-      <label for="LastName">LastName</label>
-      <input
-        id="LastName"
-        [(ngModel)]="userForm.LastName"
-        name="LastName"
-        type="text"
-        required
-      />
-
-      <label for="Email">Email</label>
-      <input
-        id="Email"
-        [(ngModel)]="userForm.Email"
-        name="Email"
-        type="Email"
-        required
-      />
+      <div class="flex direction-row justify-between gap-4">
+        <div class="flex-1">
+          <!-- First Name -->
+          <label class="req" for="FirstName">First Name</label>
+          <dx-text-box
+            id="FirstName"
+            [(ngModel)]="userForm.FirstName"
+            name="FirstName"
+            [showClearButton]="true"
+            required
+          ></dx-text-box>
+          <!-- Last Name -->
+          <label class="req" for="LastName">Last Name</label>
+          <dx-text-box
+            id="LastName"
+            [(ngModel)]="userForm.LastName"
+            name="LastName"
+            [showClearButton]="true"
+            required
+          ></dx-text-box>
+          <!-- Gender Dropdown -->
+          <label class="req" for="Gender">Gender</label>
+          <dx-select-box
+            id="Gender"
+            [(ngModel)]="userForm.Gender"
+            name="Gender"
+            [items]="GenderOptions"
+            [searchEnabled]="true"
+            required
+          ></dx-select-box>
+          <!-- WorkPlace Dropdown -->
+          <label class="req" for="WorkPlace">WorkPlace</label>
+          <dx-select-box
+            id="WorkPlace"
+            [(ngModel)]="userForm.WorkPlace"
+            name="WorkPlace"
+            [items]="WorkPlaceOptions"
+            [searchEnabled]="true"
+            required
+          ></dx-select-box>
+          <!-- Notes (Multiline Text Box) -->
+          <label for="Notes">Notes</label>
+          <dx-text-area
+            id="Notes"
+            [(ngModel)]="userForm.Notes"
+            name="Notes"
+            minHeight="60"
+            maxHeight="300"
+          ></dx-text-area>
+        </div>
+        <div class="flex-1">
+          <!-- Email -->
+          <label class="req" for="Email">Email</label>
+          <dx-text-box
+            id="Email"
+            [(ngModel)]="userForm.Email"
+            name="Email"
+            [showClearButton]="true"
+            required
+          ></dx-text-box>
+          <!-- Telefon -->
+          <label for="Phone">Telefon</label>
+          <dx-text-box
+            id="Phone"
+            [(ngModel)]="userForm.Phone"
+            name="Phone"
+            [showClearButton]="true"
+            required
+          ></dx-text-box>
+          <!-- Country Dropdown-->
+          <label class="req" for="Country">Country</label>
+          <dx-select-box
+            id="Country"
+            [(ngModel)]="userForm.Country"
+            name="Country"
+            [items]="CountryOptions"
+            [searchEnabled]="true"
+            required
+          ></dx-select-box>
+          <!-- City Dropdown -->
+          <label class="req" for="City">City</label>
+          <dx-select-box
+            id="City"
+            [(ngModel)]="userForm.City"
+            name="City"
+            [items]="CityOptions"
+            [searchEnabled]="true"
+            required
+          ></dx-select-box>
+          <!-- Adresa -->
+          <label for="Address">Adresa</label>
+          <dx-text-box
+            id="Address"
+            [(ngModel)]="userForm.Address"
+            name="Address"
+            [showClearButton]="true"
+            required
+          ></dx-text-box>
+        </div>
+        <div class="flex-1 gap-y-3">
+          <!-- Username -->
+          <label class="req" for="Username">Korisničko ime</label>
+          <dx-text-box
+            id="Username"
+            [(ngModel)]="userForm.Username"
+            name="Username"
+            [showClearButton]="true"
+            required
+          ></dx-text-box>
+          <!-- Nova Lozinka -->
+          <!-- Password Field -->
+          <label for="password">Password</label>
+          <dx-text-box
+            [(ngModel)]="userForm.Password"
+            name="Password"
+            placeholder="Enter password"
+            [mode]="showPassword ? 'text' : 'password'"
+          >
+            <dxi-button
+              *dxTemplate="let data of 'content'"
+              icon="{{ showPassword ? 'eye' : 'eyeclosed' }}"
+              (onClick)="togglePasswordVisibility()"
+            ></dxi-button>
+          </dx-text-box>
+          <!-- Confirm Password Field -->
+          <label for="confirmPassword">Confirm Password</label>
+          <dx-text-box
+            [(ngModel)]="userForm.ConfirmPassword"
+            name="ConfirmPassword"
+            placeholder="Confirm password"
+            [mode]="showConfirmPassword ? 'text' : 'password'"
+          >
+            <dxi-button
+              *dxTemplate="let data of 'content'"
+              icon="{{ showConfirmPassword ? 'eye' : 'eyeclosed' }}"
+              (onClick)="toggleConfirmPasswordVisibility()"
+            ></dxi-button>
+          </dx-text-box>
+          <!-- Multi-Select Checkbox (dxTagBox) -->
+          <label class="req" for="roles">Role</label>
+          <div class="flex flex-col p-t-2 gap-y-1">
+            <dx-check-box
+              [(value)]="RoleAdmin"
+              [text]="'Administrator'"
+            ></dx-check-box>
+            <dx-check-box [(value)]="RoleUser" [text]="'User'"></dx-check-box>
+          </div>
+        </div>
+      </div>
 
       <div class="modal-actions">
         <button type="button" (click)="close()">Cancel</button>

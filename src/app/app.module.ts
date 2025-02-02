@@ -10,6 +10,7 @@ import {
   DxDataGridModule,
   DxSelectBoxModule,
   DxTagBoxModule,
+  DxTextAreaModule,
   DxTextBoxModule,
 } from 'devextreme-angular';
 import { CommonModule } from '@angular/common';
@@ -33,6 +34,8 @@ import { FormsModule } from '@angular/forms';
     DxDataGridModule,
     DxSelectBoxModule,
     DxTagBoxModule,
+    DxTextAreaModule,
+    DxCheckBoxModule,
     CommonModule,
     HttpClientModule,
     FormsModule,

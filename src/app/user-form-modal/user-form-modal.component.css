@@ -15,7 +15,8 @@
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  width: 400px;
+  width: 70vw;
+  /* width: 400px; */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -25,15 +26,9 @@ form {
 }
 
 label {
-  margin-top: 10px;
-}
-
-input {
-  padding: 8px;
-  margin-top: 5px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  margin-top: 12px;
+  paddint-top: 12px;
+  margin-bottom: 5px;
 }
 
 .modal-actions {
@@ -53,4 +48,9 @@ button {
 
 button:hover {
   background-color: #45a049;
+}
+
+.req::after {
+  content: " *";
+  color: red;
 }

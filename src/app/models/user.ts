@@ -22,4 +22,6 @@ export interface User {
   Gender?: string;
   Notes?: string;
   Address?: string;
+  Password?: string;
+  ConfirmPassword?: string;
 }
