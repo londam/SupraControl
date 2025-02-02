@@ -1,4 +1,6 @@
 .login-container {
+  display: flex;
+  flex-direction: column; /* Align items vertically */
   width: 300px;
   margin: 100px auto;
   text-align: center;
@@ -6,30 +8,33 @@
   color: gray;
   padding: 30px;
   border-radius: 12px;
+}
 
-  dx-text-box,
-  dx-button {
-    display: block;
-    margin: 10px auto;
-  }
-  h1 {
-    text-align: left;
-    font-size: 16px;
-  }
-  span {
-    color: white;
-    font-size: 20px;
-  }
-  p {
-    text-align: right;
-    margin-v: 0px;
-    padding-v: 0px;
-  }
+.login-container dx-text-box,
+.login-container dx-button {
+  display: block;
+  margin: 10px auto;
+}
 
-  .error-message {
-    color: red;
-    margin-top: 10px;
-  }
+h1 {
+  text-align: left;
+  font-size: 16px;
+}
+
+span {
+  color: white;
+  font-size: 20px;
+}
+
+p {
+  text-align: right;
+  margin: 0;
+  padding: 0;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
 }
 
 .login-outer {
