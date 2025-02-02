@@ -24,11 +24,11 @@ export class UsersComponent {
   selectedRows: User[] = [];
 
   // Action Button Handlers
-  editUser() {
+  onEditUser() {
     console.log('Edit user clicked');
   }
 
-  deleteUser() {
+  onDeleteUser() {
     const selectedUsers = this.selectedRows;
     if (selectedUsers.length === 0) {
       alert('No users selected for deletion.');
@@ -51,14 +51,14 @@ export class UsersComponent {
       (user) => !usersToDelete.includes(user)
     );
     alert('User(s) deleted successfully!');
-    // Here, you could also send a request to the server to delete the users
+    // Later, add here to send a request to the server to delete the users
   }
 
-  addNewUser() {
+  onAddNewUser() {
     console.log('Add new user clicked');
   }
 
-  searchUsers() {
+  onSearchUsers() {
     console.log('Search clicked');
   }
   // Update filtered users based on selected roles
