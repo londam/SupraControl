@@ -1,159 +1,129 @@
 import { Component } from '@angular/core';
-import { SelectionChangedEvent } from 'devextreme/ui/accordion';
 import { TableColumn, User } from '../models/types';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
-  styleUrl: './users.component.css',
+  styleUrls: ['./users.component.css'],
 })
 export class UsersComponent {
-  // Example Data
   users: User[] = USERS;
-  // Columns in the DataGrid
   columns: TableColumn[] = TABLECOLUMNS;
+  roleOptions: string[] = ROLEOPTIONS;
 
-  roleOptions = ROLEOPTIONS;
+  //Roles selected in tag box
+  selectedRoles: string[] = [];
 
-  selectedRoles: string[] = []; // Roles selected in the dropdown
-  filteredUsers: User[] = [...this.users]; // Filtered user list based on role selection
+  //users shown at any time in the datagrid - we can't assign function to datagrid
+  filteredUsers: User[] = [...this.users];
 
-  // Search bar in title
-  isSearchVisible: boolean = false; // Track search input visibility
-  searchQuery: string = ''; // Search query
+  searchQuery: string = '';
 
-  // Filtering functionality
-  searchFilter: string = ''; // Filter value for real-time column search
-
-  // Users selected by hand in the data grid
+  //Manually selected users (for deleting or editing)
   selectedUsers: User[] = [];
-
   selectedUser: User | null = null;
-  isModalVisible: boolean = false;
 
-  // Show/hide the search input field
+  isModalVisible: boolean = false;
+  isSearchVisible: boolean = false;
+
+  // Toggle search visibility
   toggleSearch() {
     this.isSearchVisible = !this.isSearchVisible;
-    if (!this.isSearchVisible) {
-      this.clearSearch(); // Clear search when hiding the input
-    }
+    if (!this.isSearchVisible) this.clearSearch();
   }
 
-  // Handle search change (filter users)
+  // Handle search change
   onSearchChange(query: string) {
     this.searchQuery = query;
-    this.filteredUsers = this.filterUsers(query);
+    this.filteredUsers = this.applyFiltersToUsers();
   }
 
-  // Filter users based on the search query (search across all properties)
-  filterUsers(query: string): User[] {
-    if (!query) return [...this.users]; // No search query, show all users
-    return this.users.filter((user) =>
-      Object.values(user).some(
-        (value) => String(value).toLowerCase().includes(query.toLowerCase()) // Case-insensitive search
-      )
+  // Apply all active filters (search + role)
+  applyFiltersToUsers(): User[] {
+    return this.users
+      .filter((user) => this.isRoleFiltered(user))
+      .filter((user) => this.isSearchFiltered(user));
+  }
+
+  // Check if user matches selected roles
+  isRoleFiltered(user: User): boolean {
+    return (
+      this.selectedRoles.length === 0 || this.selectedRoles.includes(user.role)
     );
   }
 
-  // Clear search
-  clearSearch() {
-    this.searchQuery = '';
-    this.filteredUsers = [...this.users]; // Reset to all users
+  // Check if user matches search query
+  isSearchFiltered(user: User): boolean {
+    if (!this.searchQuery) return true;
+    return Object.values(user).some((value) =>
+      String(value).toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
   }
 
-  // Action Button Handlers
+  // Clear search and reset filter
+  clearSearch() {
+    this.searchQuery = '';
+    this.filteredUsers = [...this.users];
+  }
+
+  // Action Handlers
   onEditUser() {
     if (this.selectedUsers.length === 1) {
-      this.selectedUser = { ...this.selectedUsers[0] }; // Pass user data to the modal for editing
-      this.isModalVisible = true; // Show modal
+      this.selectedUser = { ...this.selectedUsers[0] };
+      this.isModalVisible = true;
     }
   }
 
   onDeleteUser() {
-    const selectedUsers = this.selectedUsers;
-    if (selectedUsers.length === 0) {
-      alert('No users selected for deletion.');
+    if (
+      !this.selectedUsers.length ||
+      !confirm(`Delete ${this.selectedUsers.length} user(s)?`)
+    )
       return;
-    }
-
-    // Show a confirmation dialog
-    const confirmation = window.confirm(
-      `Are you sure you want to delete ${selectedUsers.length} user(s)?`
-    );
-
-    if (confirmation) {
-      this.removeUsers(selectedUsers);
-    }
+    this.removeUsers(this.selectedUsers);
   }
 
-  // Remove users from the list
+  // Remove selected users
   removeUsers(usersToDelete: User[]) {
     this.filteredUsers = this.filteredUsers.filter(
       (user) => !usersToDelete.includes(user)
     );
     alert('User(s) deleted successfully!');
-    // Later, add here to send a request to the server to delete the users
   }
 
   onAddNewUser() {
-    console.log('Add new user clicked');
-    this.selectedUser = null; // Reset selected user for adding
-    this.isModalVisible = true; // Show modal
+    this.selectedUser = null;
+    this.isModalVisible = true;
   }
 
-  onSearchUsers() {
-    console.log('Search clicked');
-  }
   // Update filtered users based on selected roles
   onRoleFilterChanged() {
-    if (this.selectedRoles.length === 0) {
-      this.filteredUsers = [...this.users]; // No role selected, show all users
-    } else {
-      this.filteredUsers = this.users.filter((user) =>
-        // Check if the user's role is included in the selected roles
-        this.selectedRoles.some((role) => role === user.role)
-      );
-    }
+    this.filteredUsers = this.applyFiltersToUsers();
   }
 
-  // Close the modal
+  // Close modal
   closeModal() {
     this.isModalVisible = false;
   }
 
-  // Save the user after editing or adding
+  // Save user after editing or adding
   saveUser(user: User) {
-    let updatedUsers: User[];
-    let updatedFilteredUsers: User[] = [...this.filteredUsers];
-
     if (user.id) {
-      // Update user in the list (for editing)
-      updatedUsers = this.users.map((u) =>
-        u.id === user.id ? { ...user } : u
-      );
-      updatedFilteredUsers = this.users.map((u) =>
-        u.id === user.id ? { ...user } : u
-      );
+      this.users = this.users.map((u) => (u.id === user.id ? { ...user } : u));
     } else {
-      // Add new user (for adding)
       user.id = this.users.length + 1;
-      updatedUsers = [...this.users, user];
+      this.users.push(user);
     }
-    this.users = updatedUsers; // Assign the new array to trigger change detection
-    this.filteredUsers = updatedFilteredUsers; // Assign the new array to trigger change detection
-    console.log(this.users);
+    this.filteredUsers = this.applyFiltersToUsers();
+    this.closeModal();
   }
 
   // Handle selection of users in the DataGrid
   onSelectionChanged(event: any) {
     this.selectedUsers = event.selectedRowsData;
-    console.log('Selected Users:', this.selectedUsers);
   }
 }
 
-// MOCK DATA
-// MOCK DATA
-// MOCK DATA
 // MOCK DATA
 const USERS: User[] = [
   {
@@ -175,7 +145,7 @@ const USERS: User[] = [
     name: 'Stim',
     surname: 'Jubilee',
     role: 'User',
-    email: 'jane@example.com',
+    email: 'stim@example.com',
   },
   {
     id: 4,
@@ -184,15 +154,12 @@ const USERS: User[] = [
     role: 'Moderator',
     email: 'robert@example.com',
   },
-  // More users
 ];
 
 const TABLECOLUMNS: TableColumn[] = [
   { field: 'name', caption: 'Name', allowSorting: true },
   { field: 'surname', caption: 'Surname', allowSorting: true },
   { field: 'role', caption: 'Role', allowSorting: true },
-  // Add more columns as needed
 ];
 
-// Predefined roles for multi-select dropdown
 const ROLEOPTIONS: string[] = ['Admin', 'User', 'Moderator'];

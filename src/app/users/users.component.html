@@ -71,7 +71,7 @@
     <!-- DataGrid Table -->
     <dx-data-grid
       class="w-full"
-      [dataSource]="filteredUsers"
+      [dataSource]="applyFiltersToUsers()"
       [columns]="columns"
       [showBorders]="true"
       [selection]="{ mode: 'multiple' }"
