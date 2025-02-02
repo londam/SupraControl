@@ -4,7 +4,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
-import { DxButtonModule, DxTextBoxModule } from 'devextreme-angular';
+import {
+  DxButtonModule,
+  DxCheckBoxModule,
+  DxDataGridModule,
+  DxSelectBoxModule,
+  DxTagBoxModule,
+  DxTextBoxModule,
+} from 'devextreme-angular';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { UsersComponent } from './users/users.component';
@@ -16,6 +23,9 @@ import { UsersComponent } from './users/users.component';
     AppRoutingModule,
     DxButtonModule,
     DxTextBoxModule,
+    DxDataGridModule,
+    DxSelectBoxModule,
+    DxTagBoxModule,
     CommonModule,
     HttpClientModule,
   ],

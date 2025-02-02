@@ -1,1 +1,77 @@
-<p>users works!</p>
+<div class="p-5">
+  <!-- Top Row: Title and Action Buttons -->
+  <div class="flex flex-row justify-between items-center bg-[#edf1f5] p-4">
+    <h1 class="!text-[14px] !font-bold">KORISNICI</h1>
+    <div class="flex gap-x-[4px] px-2">
+      <dx-button
+        class="action-button"
+        icon="edit"
+        (onClick)="editUser()"
+      ></dx-button>
+      <dx-button
+        class="action-button"
+        icon="trash"
+        (onClick)="deleteUser()"
+      ></dx-button>
+      <dx-button
+        class="action-button"
+        icon="search"
+        (onClick)="searchUsers()"
+      ></dx-button>
+      <dx-button
+        class="!rounded-full action-button"
+        icon="add"
+        type="success"
+        (onClick)="addNewUser()"
+      ></dx-button>
+    </div>
+  </div>
+  <div
+    class="border-[#edf1f5] border-2 p-4 gap-y-2 flex flex-col items-stretch"
+  >
+    <!-- Role Filter Dropdown -->
+    <div class="filter-row flex align-items-start">
+      <dx-tag-box
+        class="min-w-[200px] max-w-[100%]"
+        label="Role"
+        labelMode="floating"
+        [dataSource]="roleOptions"
+        [(value)]="selectedRoles"
+        [placeholder]="'Role'"
+        [showMultiTagOnly]="true"
+        [searchEnabled]="true"
+        (onValueChanged)="onRoleFilterChanged()"
+      >
+      </dx-tag-box>
+    </div>
+    <!-- DataGrid Table -->
+    <dx-data-grid
+      class="w-full"
+      [dataSource]="filteredUsers"
+      [columns]="columns"
+      [showBorders]="true"
+      [selection]="{ mode: 'multiple' }"
+      (onSelectionChanged)="onSelectionChanged($event)"
+    >
+      <!-- Column Headers (with sorting and filtering) -->
+      <dxo-sorting mode="multiple"></dxo-sorting>
+      <dxi-column
+        dataField="name"
+        caption="Name"
+        [allowSorting]="true"
+        [filterValue]="searchFilter"
+        [width]="150"
+      >
+      </dxi-column>
+      <dxi-column
+        dataField="role"
+        caption="Role"
+        [allowSorting]="true"
+        [filterValue]="searchFilter"
+        [width]="150"
+      >
+      </dxi-column>
+      <!-- Add more columns as needed -->
+    </dx-data-grid>
+  </div>
+</div>

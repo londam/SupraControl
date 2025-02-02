@@ -1,0 +1,12 @@
+.action-button {
+  width: 24px;
+  height: 24px;
+
+  ::ng-deep .dx-button-content {
+    padding: 2px;
+  }
+
+  ::ng-deep .dx-icon {
+    font-size: 14px;
+  }
+}
