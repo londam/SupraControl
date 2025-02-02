@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { User } from '../models/types'; // Import User type
+import { User } from '../models/user'; // Import User type
 
 @Component({
   selector: 'app-user-form-modal',
@@ -12,11 +12,10 @@ export class UserFormModalComponent {
   @Output() saveUser: EventEmitter<User> = new EventEmitter();
 
   userForm: User = {
-    id: 0,
-    name: '',
-    surname: '',
-    role: [''],
-    email: '',
+    Id: 0,
+    FirstName: '',
+    LastName: '',
+    Email: '',
   }; // Default form values
 
   ngOnChanges() {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from './models/types';
+import { User } from './models/user';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,7 @@ export class FilterService {
   filterByRoles(users: User[], selectedRoles: string[]): User[] {
     if (selectedRoles.length === 0) return users; // No filter applied
     let fileteredUsers = users.filter((user) =>
-      user.role.some((r) => selectedRoles.includes(r))
+      user.RoleNames?.some((r) => selectedRoles.includes(r))
     );
     return fileteredUsers;
   }

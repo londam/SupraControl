@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { TableColumn, User } from '../models/types';
+import { User } from '../models/user';
 import { UserService } from '../user.service';
 import { ModalService } from '../modal.service';
 import { FilterService } from '../filter.service';
+import { TableColumn, TABLECOLUMNS } from '../models/tableColumn';
+import { ROLEOPTIONS } from '../models/role';
 
 @Component({
   selector: 'app-users',
@@ -11,8 +13,7 @@ import { FilterService } from '../filter.service';
 })
 export class UsersComponent {
   users: User[] = [];
-  //users shown at any time in the datagrid - we can't assign function to datagrid
-  //TODO - change this into function!
+  //users shown at any time in the datagrid
   filteredUsers: User[] = [];
 
   //Roles selected in tag box
@@ -24,7 +25,7 @@ export class UsersComponent {
   selectedUsers: User[] = [];
 
   columns: TableColumn[] = TABLECOLUMNS;
-  roleOptions: string[] = ROLEOPTIONS;
+  roleOptions: string[] = Object.keys(ROLEOPTIONS);
 
   isSearchVisible: boolean = false;
 
@@ -32,9 +33,22 @@ export class UsersComponent {
     private userService: UserService,
     public modalService: ModalService,
     private filterService: FilterService
-  ) {
-    this.users = this.userService.getUsers();
-    this.filteredUsers = [...this.users];
+  ) {}
+
+  ngOnInit() {
+    // Subscribe to loadUsers and handle the data
+    this.userService.loadUsers().subscribe({
+      next: (data) => {
+        this.users = data.map((user) => ({
+          ...user,
+          RoleNames: user.Roles?.map((role) => role.Name), // Convert list of objects to list of strings
+        }));
+        this.filteredUsers = [...this.users]; // Initialize filtered users
+      },
+      error: (err) => {
+        console.error('Error fetching users:', err);
+      },
+    });
   }
 
   // Update filtered users based on selected roles and search query
@@ -78,7 +92,9 @@ export class UsersComponent {
         `Are you sure you want to delete ${this.selectedUsers.length} user(s)?`
       )
     ) {
-      this.selectedUsers.forEach((user) => this.userService.deleteUser(user));
+      this.selectedUsers.forEach((user) =>
+        this.userService.deleteUser(user, this.users)
+      );
       this.applyFiltersToUsers();
     }
   }
@@ -88,10 +104,10 @@ export class UsersComponent {
   }
 
   saveUser(user: User) {
-    if (user.id) {
-      this.userService.updateUser(user);
+    if (user.Id) {
+      this.userService.updateUser(user, this.users);
     } else {
-      this.userService.addUser(user);
+      this.userService.addUser(user, this.users);
     }
     this.applyFiltersToUsers();
     this.modalService.closeModal();
@@ -107,11 +123,3 @@ export class UsersComponent {
     this.selectedUsers = event.selectedRowsData;
   }
 }
-
-const TABLECOLUMNS: TableColumn[] = [
-  { field: 'name', caption: 'Name', allowSorting: true },
-  { field: 'surname', caption: 'Surname', allowSorting: true },
-  { field: 'role', caption: 'Role', allowSorting: true },
-];
-
-const ROLEOPTIONS: string[] = ['Admin', 'User', 'Moderator'];

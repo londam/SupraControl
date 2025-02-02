@@ -76,17 +76,11 @@
       <!-- Column Headers (with sorting and filtering) -->
       <dxo-sorting mode="multiple"></dxo-sorting>
       <dxi-column
-        dataField="name"
-        caption="Name"
-        [allowSorting]="true"
-        [width]="150"
-      >
-      </dxi-column>
-      <dxi-column
-        dataField="role"
-        caption="Role"
-        [allowSorting]="true"
-        [width]="150"
+        *ngFor="let column of columns"
+        [dataField]="column.field"
+        [caption]="column.caption"
+        [allowSorting]="column.allowSorting"
+        [width]="column.width || 100"
       >
       </dxi-column>
       <!-- Add more columns as needed -->

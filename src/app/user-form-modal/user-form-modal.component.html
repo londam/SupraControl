@@ -3,39 +3,30 @@
     <h2>{{ user ? "Edit User" : "Add New User" }}</h2>
 
     <form>
-      <label for="name">Name</label>
+      <label for="FirstName">FirstName</label>
       <input
-        id="name"
-        [(ngModel)]="userForm.name"
-        name="name"
+        id="FirstName"
+        [(ngModel)]="userForm.FirstName"
+        name="FirstName"
         type="text"
         required
       />
 
-      <label for="surname">Surname</label>
+      <label for="LastName">LastName</label>
       <input
-        id="surname"
-        [(ngModel)]="userForm.surname"
-        name="surname"
+        id="LastName"
+        [(ngModel)]="userForm.LastName"
+        name="LastName"
         type="text"
         required
       />
 
-      <label for="role">Role</label>
+      <label for="Email">Email</label>
       <input
-        id="role"
-        [(ngModel)]="userForm.role"
-        name="role"
-        type="text"
-        required
-      />
-
-      <label for="email">Email</label>
-      <input
-        id="email"
-        [(ngModel)]="userForm.email"
-        name="email"
-        type="email"
+        id="Email"
+        [(ngModel)]="userForm.Email"
+        name="Email"
+        type="Email"
         required
       />
 
