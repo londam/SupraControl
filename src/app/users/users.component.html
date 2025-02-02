@@ -34,11 +34,7 @@
           (valueChange)="onSearchChange($event)"
         >
         </dx-text-box>
-        <dx-button
-          class="action-button"
-          icon="clear"
-          (onClick)="clearSearch()"
-        ></dx-button>
+        <dx-button class="action-button" icon="clear"></dx-button>
         <!-- Clear search button -->
       </div>
 
@@ -71,7 +67,7 @@
     <!-- DataGrid Table -->
     <dx-data-grid
       class="w-full"
-      [dataSource]="applyFiltersToUsers()"
+      [dataSource]="filteredUsers"
       [columns]="columns"
       [showBorders]="true"
       [selection]="{ mode: 'multiple' }"
@@ -83,7 +79,6 @@
         dataField="name"
         caption="Name"
         [allowSorting]="true"
-        [filterValue]="searchFilter"
         [width]="150"
       >
       </dxi-column>
@@ -91,7 +86,6 @@
         dataField="role"
         caption="Role"
         [allowSorting]="true"
-        [filterValue]="searchFilter"
         [width]="150"
       >
       </dxi-column>
@@ -102,8 +96,8 @@
 
 <!-- User Form Modal -->
 <app-user-form-modal
-  *ngIf="isModalVisible"
-  [user]="selectedUser"
+  *ngIf="this.modalService.isModalVisible"
+  [user]="this.modalService.selectedUser"
   (closeModal)="closeModal()"
   (saveUser)="saveUser($event)"
 >

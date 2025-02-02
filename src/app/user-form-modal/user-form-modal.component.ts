@@ -15,7 +15,7 @@ export class UserFormModalComponent {
     id: 0,
     name: '',
     surname: '',
-    role: '',
+    role: [''],
     email: '',
   }; // Default form values
 

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { TableColumn, User } from '../models/types';
+import { UserService } from '../user.service';
+import { ModalService } from '../modal.service';
+import { FilterService } from '../filter.service';
 
 @Component({
   selector: 'app-users',
@@ -7,115 +10,96 @@ import { TableColumn, User } from '../models/types';
   styleUrls: ['./users.component.css'],
 })
 export class UsersComponent {
-  users: User[] = USERS;
-  columns: TableColumn[] = TABLECOLUMNS;
-  roleOptions: string[] = ROLEOPTIONS;
+  users: User[] = [];
+  //users shown at any time in the datagrid - we can't assign function to datagrid
+  //TODO - change this into function!
+  filteredUsers: User[] = [];
 
   //Roles selected in tag box
   selectedRoles: string[] = [];
-
-  //users shown at any time in the datagrid - we can't assign function to datagrid
-  filteredUsers: User[] = [...this.users];
 
   searchQuery: string = '';
 
   //Manually selected users (for deleting or editing)
   selectedUsers: User[] = [];
-  selectedUser: User | null = null;
 
-  isModalVisible: boolean = false;
+  columns: TableColumn[] = TABLECOLUMNS;
+  roleOptions: string[] = ROLEOPTIONS;
+
   isSearchVisible: boolean = false;
+
+  constructor(
+    private userService: UserService,
+    public modalService: ModalService,
+    private filterService: FilterService
+  ) {
+    this.users = this.userService.getUsers();
+    this.filteredUsers = [...this.users];
+  }
+
+  // Update filtered users based on selected roles and search query
+  applyFiltersToUsers() {
+    let filteredByRoles = this.filterService.filterByRoles(
+      this.users,
+      this.selectedRoles
+    );
+    this.filteredUsers = this.filterService.filterBySearch(
+      filteredByRoles,
+      this.searchQuery
+    );
+  }
 
   // Toggle search visibility
   toggleSearch() {
     this.isSearchVisible = !this.isSearchVisible;
-    if (!this.isSearchVisible) this.clearSearch();
+    if (!this.isSearchVisible) this.searchQuery = '';
   }
 
-  // Handle search change
   onSearchChange(query: string) {
     this.searchQuery = query;
-    this.filteredUsers = this.applyFiltersToUsers();
-  }
-
-  // Apply all active filters (search + role)
-  applyFiltersToUsers(): User[] {
-    return this.users
-      .filter((user) => this.isRoleFiltered(user))
-      .filter((user) => this.isSearchFiltered(user));
-  }
-
-  // Check if user matches selected roles
-  isRoleFiltered(user: User): boolean {
-    return (
-      this.selectedRoles.length === 0 || this.selectedRoles.includes(user.role)
-    );
-  }
-
-  // Check if user matches search query
-  isSearchFiltered(user: User): boolean {
-    if (!this.searchQuery) return true;
-    return Object.values(user).some((value) =>
-      String(value).toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
-  }
-
-  // Clear search and reset filter
-  clearSearch() {
-    this.searchQuery = '';
-    this.filteredUsers = [...this.users];
-  }
-
-  // Action Handlers
-  onEditUser() {
-    if (this.selectedUsers.length === 1) {
-      this.selectedUser = { ...this.selectedUsers[0] };
-      this.isModalVisible = true;
-    }
-  }
-
-  onDeleteUser() {
-    if (
-      !this.selectedUsers.length ||
-      !confirm(`Delete ${this.selectedUsers.length} user(s)?`)
-    )
-      return;
-    this.removeUsers(this.selectedUsers);
-  }
-
-  // Remove selected users
-  removeUsers(usersToDelete: User[]) {
-    this.filteredUsers = this.filteredUsers.filter(
-      (user) => !usersToDelete.includes(user)
-    );
-    alert('User(s) deleted successfully!');
-  }
-
-  onAddNewUser() {
-    this.selectedUser = null;
-    this.isModalVisible = true;
+    this.applyFiltersToUsers();
   }
 
   // Update filtered users based on selected roles
   onRoleFilterChanged() {
-    this.filteredUsers = this.applyFiltersToUsers();
+    this.applyFiltersToUsers();
   }
 
-  // Close modal
-  closeModal() {
-    this.isModalVisible = false;
+  onEditUser() {
+    if (this.selectedUsers.length === 1) {
+      this.modalService.openModal(this.selectedUsers[0]);
+    }
   }
 
-  // Save user after editing or adding
+  onDeleteUser() {
+    if (this.selectedUsers.length === 0) return;
+    if (
+      window.confirm(
+        `Are you sure you want to delete ${this.selectedUsers.length} user(s)?`
+      )
+    ) {
+      this.selectedUsers.forEach((user) => this.userService.deleteUser(user));
+      this.applyFiltersToUsers();
+    }
+  }
+
+  onAddNewUser() {
+    this.modalService.openModal();
+  }
+
   saveUser(user: User) {
     if (user.id) {
-      this.users = this.users.map((u) => (u.id === user.id ? { ...user } : u));
+      this.userService.updateUser(user);
     } else {
-      user.id = this.users.length + 1;
-      this.users.push(user);
+      this.userService.addUser(user);
     }
-    this.filteredUsers = this.applyFiltersToUsers();
-    this.closeModal();
+    this.applyFiltersToUsers();
+    this.modalService.closeModal();
+  }
+
+  // Close modal after edit or add new user
+  closeModal() {
+    this.modalService.closeModal();
   }
 
   // Handle selection of users in the DataGrid
@@ -123,38 +107,6 @@ export class UsersComponent {
     this.selectedUsers = event.selectedRowsData;
   }
 }
-
-// MOCK DATA
-const USERS: User[] = [
-  {
-    id: 1,
-    name: 'John',
-    surname: 'Doe',
-    role: 'Admin',
-    email: 'john@example.com',
-  },
-  {
-    id: 2,
-    name: 'Jane',
-    surname: 'Smith',
-    role: 'User',
-    email: 'jane@example.com',
-  },
-  {
-    id: 3,
-    name: 'Stim',
-    surname: 'Jubilee',
-    role: 'User',
-    email: 'stim@example.com',
-  },
-  {
-    id: 4,
-    name: 'Robert',
-    surname: 'Johnson',
-    role: 'Moderator',
-    email: 'robert@example.com',
-  },
-];
 
 const TABLECOLUMNS: TableColumn[] = [
   { field: 'name', caption: 'Name', allowSorting: true },
