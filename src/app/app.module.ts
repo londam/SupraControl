@@ -7,9 +7,10 @@ import { LoginComponent } from './login/login.component';
 import { DxButtonModule, DxTextBoxModule } from 'devextreme-angular';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { UsersComponent } from './users/users.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent],
+  declarations: [AppComponent, LoginComponent, UsersComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
