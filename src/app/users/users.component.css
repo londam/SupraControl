@@ -10,3 +10,30 @@
     font-size: 14px;
   }
 }
+
+.search-container {
+  display: flex;
+  align-items: center;
+  transition: all 0.1s ease;
+
+  ::ng-deep .dx-text-box {
+    width: 200px; /* Initial width for input */
+    transition: width 0.1s ease;
+    height: 24px;
+  }
+
+  ::ng-deep .dx-texteditor-container {
+    height: 24px;
+  }
+
+  ::ng-deep .dx-texteditor-input {
+    font-size: 14px;
+    width: 200px; /* Initial width for input */
+    padding: 0px 4px 6px 4px;
+    transition: width 11.6s ease;
+  }
+  ::ng-deep .dx-text-box .dx-placeholder {
+    font-size: 14px;
+    padding: 0px 4px 6px 4px;
+  }
+}

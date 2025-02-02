@@ -14,14 +14,48 @@ export class UsersComponent {
 
   roleOptions = ROLEOPTIONS;
 
-  filteredUsers: User[] = [...this.users]; // Filtered user list based on role selection
   selectedRoles: string[] = []; // Roles selected in the dropdown
+  filteredUsers: User[] = [...this.users]; // Filtered user list based on role selection
+
+  // Search bar in title
+  isSearchVisible: boolean = false; // Track search input visibility
+  searchQuery: string = ''; // Search query
 
   // Filtering functionality
   searchFilter: string = ''; // Filter value for real-time column search
 
   // Users selected by hand in the data grid
   selectedRows: User[] = [];
+
+  // Show/hide the search input field
+  toggleSearch() {
+    this.isSearchVisible = !this.isSearchVisible;
+    if (!this.isSearchVisible) {
+      this.clearSearch(); // Clear search when hiding the input
+    }
+  }
+
+  // Handle search change (filter users)
+  onSearchChange(query: string) {
+    this.searchQuery = query;
+    this.filteredUsers = this.filterUsers(query);
+  }
+
+  // Filter users based on the search query (search across all properties)
+  filterUsers(query: string): User[] {
+    if (!query) return [...this.users]; // No search query, show all users
+    return this.users.filter((user) =>
+      Object.values(user).some(
+        (value) => String(value).toLowerCase().includes(query.toLowerCase()) // Case-insensitive search
+      )
+    );
+  }
+
+  // Clear search
+  clearSearch() {
+    this.searchQuery = '';
+    this.filteredUsers = [...this.users]; // Reset to all users
+  }
 
   // Action Button Handlers
   onEditUser() {
@@ -105,6 +139,13 @@ const USERS: User[] = [
     surname: 'Jubilee',
     role: 'User',
     email: 'jane@example.com',
+  },
+  {
+    id: 3,
+    name: 'Robert',
+    surname: 'Johnson',
+    role: 'Moderator',
+    email: 'robert@example.com',
   },
   // More users
 ];
