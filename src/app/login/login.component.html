@@ -1,1 +1,22 @@
-<p>login works!</p>
+<div class="login-outer">
+  <div class="login-container">
+    <img class="login-logo" src="/assets/SC_vertical.png" alt="" />
+    <h1><span>Welcome.</span> Please log in.</h1>
+
+    <dx-text-box
+      [(value)]="username"
+      placeholder="Korisničko ime"
+    ></dx-text-box>
+    <dx-text-box
+      [(value)]="password"
+      mode="password"
+      placeholder="Lozinka"
+    ></dx-text-box>
+
+    <dx-button text="Prijavi se" type="success" (onClick)="login()"></dx-button>
+
+    <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <p>Forgot password</p>
+    <p>Forgot username</p>
+  </div>
+</div>

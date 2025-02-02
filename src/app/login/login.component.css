@@ -1,0 +1,45 @@
+.login-container {
+  width: 300px;
+  margin: 100px auto;
+  text-align: center;
+  background-color: #1a1a1a;
+  color: gray;
+  padding: 30px;
+  border-radius: 12px;
+
+  dx-text-box,
+  dx-button {
+    display: block;
+    margin: 10px auto;
+  }
+  h1 {
+    text-align: left;
+    font-size: 16px;
+  }
+  span {
+    color: white;
+    font-size: 20px;
+  }
+  p {
+    text-align: right;
+    margin-v: 0px;
+    padding-v: 0px;
+  }
+
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+}
+
+.login-outer {
+  background-color: #2a2a2a;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login-logo {
+  height: 100px;
+}
