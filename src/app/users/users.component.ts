@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { SelectionChangedEvent } from 'devextreme/ui/accordion';
+import { TableColumn, User } from '../models/types';
 
 @Component({
   selector: 'app-users',
@@ -25,7 +26,10 @@ export class UsersComponent {
   searchFilter: string = ''; // Filter value for real-time column search
 
   // Users selected by hand in the data grid
-  selectedRows: User[] = [];
+  selectedUsers: User[] = [];
+
+  selectedUser: User | null = null;
+  isModalVisible: boolean = false;
 
   // Show/hide the search input field
   toggleSearch() {
@@ -59,11 +63,14 @@ export class UsersComponent {
 
   // Action Button Handlers
   onEditUser() {
-    console.log('Edit user clicked');
+    if (this.selectedUsers.length === 1) {
+      this.selectedUser = { ...this.selectedUsers[0] }; // Pass user data to the modal for editing
+      this.isModalVisible = true; // Show modal
+    }
   }
 
   onDeleteUser() {
-    const selectedUsers = this.selectedRows;
+    const selectedUsers = this.selectedUsers;
     if (selectedUsers.length === 0) {
       alert('No users selected for deletion.');
       return;
@@ -90,6 +97,8 @@ export class UsersComponent {
 
   onAddNewUser() {
     console.log('Add new user clicked');
+    this.selectedUser = null; // Reset selected user for adding
+    this.isModalVisible = true; // Show modal
   }
 
   onSearchUsers() {
@@ -107,10 +116,38 @@ export class UsersComponent {
     }
   }
 
+  // Close the modal
+  closeModal() {
+    this.isModalVisible = false;
+  }
+
+  // Save the user after editing or adding
+  saveUser(user: User) {
+    let updatedUsers: User[];
+    let updatedFilteredUsers: User[] = [...this.filteredUsers];
+
+    if (user.id) {
+      // Update user in the list (for editing)
+      updatedUsers = this.users.map((u) =>
+        u.id === user.id ? { ...user } : u
+      );
+      updatedFilteredUsers = this.users.map((u) =>
+        u.id === user.id ? { ...user } : u
+      );
+    } else {
+      // Add new user (for adding)
+      user.id = this.users.length + 1;
+      updatedUsers = [...this.users, user];
+    }
+    this.users = updatedUsers; // Assign the new array to trigger change detection
+    this.filteredUsers = updatedFilteredUsers; // Assign the new array to trigger change detection
+    console.log(this.users);
+  }
+
   // Handle selection of users in the DataGrid
   onSelectionChanged(event: any) {
-    this.selectedRows = event.selectedRowsData;
-    console.log('Selected Users:', this.selectedRows);
+    this.selectedUsers = event.selectedRowsData;
+    console.log('Selected Users:', this.selectedUsers);
   }
 }
 
@@ -134,14 +171,14 @@ const USERS: User[] = [
     email: 'jane@example.com',
   },
   {
-    id: 2,
+    id: 3,
     name: 'Stim',
     surname: 'Jubilee',
     role: 'User',
     email: 'jane@example.com',
   },
   {
-    id: 3,
+    id: 4,
     name: 'Robert',
     surname: 'Johnson',
     role: 'Moderator',
@@ -159,20 +196,3 @@ const TABLECOLUMNS: TableColumn[] = [
 
 // Predefined roles for multi-select dropdown
 const ROLEOPTIONS: string[] = ['Admin', 'User', 'Moderator'];
-
-interface User {
-  id: number;
-  name: string;
-  surname: string;
-  role: string;
-  email: string;
-  // Other properties as needed
-}
-
-interface TableColumn {
-  field: keyof User;
-  caption: string;
-  allowSorting: boolean;
-  filterValue?: string;
-  width?: number;
-}

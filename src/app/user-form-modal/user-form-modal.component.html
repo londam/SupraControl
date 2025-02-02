@@ -1,0 +1,48 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <h2>{{ user ? "Edit User" : "Add New User" }}</h2>
+
+    <form>
+      <label for="name">Name</label>
+      <input
+        id="name"
+        [(ngModel)]="userForm.name"
+        name="name"
+        type="text"
+        required
+      />
+
+      <label for="surname">Surname</label>
+      <input
+        id="surname"
+        [(ngModel)]="userForm.surname"
+        name="surname"
+        type="text"
+        required
+      />
+
+      <label for="role">Role</label>
+      <input
+        id="role"
+        [(ngModel)]="userForm.role"
+        name="role"
+        type="text"
+        required
+      />
+
+      <label for="email">Email</label>
+      <input
+        id="email"
+        [(ngModel)]="userForm.email"
+        name="email"
+        type="email"
+        required
+      />
+
+      <div class="modal-actions">
+        <button type="button" (click)="close()">Cancel</button>
+        <button type="button" (click)="save()">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

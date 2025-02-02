@@ -15,9 +15,16 @@ import {
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { UsersComponent } from './users/users.component';
+import { UserFormModalComponent } from './user-form-modal/user-form-modal.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, UsersComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    UsersComponent,
+    UserFormModalComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -28,6 +35,7 @@ import { UsersComponent } from './users/users.component';
     DxTagBoxModule,
     CommonModule,
     HttpClientModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

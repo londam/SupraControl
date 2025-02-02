@@ -99,3 +99,12 @@
     </dx-data-grid>
   </div>
 </div>
+
+<!-- User Form Modal -->
+<app-user-form-modal
+  *ngIf="isModalVisible"
+  [user]="selectedUser"
+  (closeModal)="closeModal()"
+  (saveUser)="saveUser($event)"
+>
+</app-user-form-modal>
